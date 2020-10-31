@@ -93,7 +93,7 @@ const App = () => {
 
   const handleDelete = (id) => {
     setMessage(`Person with id ${id} is deleted from the contacts.`)
-    contacts.deleteContact(id).then(setPersons(persons.filter(person => person.id !== id)))
+    contacts.deleteContact(id).then(setPersons(persons.filter(person => person.id !== id))).catch(error => setMessage(`Person with id ${id} is already deleted from the server.`))
     setTimeout(() => {
       setMessage(null)
     }, 2000)
