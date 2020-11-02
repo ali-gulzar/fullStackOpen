@@ -60,7 +60,7 @@ const App = () => {
   const [ message, setMessage ] = useState(null)
 
   useEffect(() => {
-    contacts.getAll().then((response) => setPersons(response.data))
+    contacts.getAll().then((response) => setPersons(response.data.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))))
   },[])
 
   const addPerson = (event) => {
@@ -71,9 +71,10 @@ const App = () => {
       contacts.create({name: newName, number: newNumber}).then(response => {
         setMessage(`${newName} added in the phonebook`)
         setPersons([...persons].concat(response.data))
-        setTimeout(() => {
-          setMessage(null)
-        }, 2000)
+        setTimeout(() => setMessage(null), 2000)
+      }).catch(error => {
+        setMessage(error)
+        setTimeout(() => setMessage(null), 2000)
       })
     } else {
       if (window.confirm(`${newName} already exists in the phonebook, replace the old number with the new one?`)) {
@@ -99,8 +100,6 @@ const App = () => {
     }, 2000)
   }
 
-  const filterPersons = persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
-
   const onChangeAction = (event, type) => {
     if (type === "filter") {
       setFilter(event.target.value)
@@ -119,7 +118,7 @@ const App = () => {
       <h2>add a new</h2>
       <PersonForm onChangeAction={onChangeAction} newName={newName} newNumber={newNumber} addPerson={addPerson}/>
       <h2>Numbers</h2>
-      <Persons filterPersons={filterPersons} handleDelete={handleDelete}/>
+      <Persons filterPersons={persons} handleDelete={handleDelete}/>
     </div>
   )
 }
