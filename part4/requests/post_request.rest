@@ -1,10 +1,10 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsaSIsImlkIjoiNWZhMTcxOTFmMzRiNmI2OTkzODUwYTAyIiwiaWF0IjoxNjA0NDc3MTc4fQ.6LROCyW2mkW2w9mi39A9ltwxW8ZT3GYwVnLMU6GCY50
 
 {
-    "title": "What a blog",
-    "author": "Muhammad Ali Gulzar",
-    "url": "localhost",
-    "likes": 2,
-    "userId": "5fa17191f34b6b6993850a02"
+    "title": "New blog",
+    "author": "Ali",
+    "url": "localhost 2",
+    "likes": 3123123123123123
 }

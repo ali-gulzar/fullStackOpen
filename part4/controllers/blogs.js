@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const blogRouter = require('express').Router();
 const Blog = require('../models/blogs');
 const User = require('../models/users');
@@ -8,13 +9,22 @@ blogRouter.get('/', async (request, response) => {
 })
 
 blogRouter.post('/', async (request, response) => {
-
+    
     const body = request.body
+    let decodedToken;
 
+    try {
+        decodedToken = jwt.verify(request.token, process.env.SECRET)
+    } catch {
+        return response.status(401).json({ error: 'Invalid token' })
+    }
+    if (!request.token || !decodedToken.id) {
+        response.status(401).json({ error: 'token missing or invalid' })
+    }
     let blog;
     let user;
     try {
-        user = await User.findById(body.userId)
+        user = await User.findById(decodedToken.id)
         blog = new Blog({
             title: body.title,
             author: body.author,
@@ -27,7 +37,7 @@ blogRouter.post('/', async (request, response) => {
     }
 
     if (blog.url === undefined || blog.title === undefined) {
-        response.status(400).end()
+        response.status(400).json({error: "url and title are not defined"})
     } else {
         await blog.save()
         user.blogs = user.blogs.concat(blog.id)
