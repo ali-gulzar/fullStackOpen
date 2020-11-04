@@ -27,10 +27,19 @@ test('check the existence of key id in a document', async () => {
 })
 
 test('save a blog to the database', async () => {
+
   const blogs = await Blog.find({})
 
-  const blog = new Blog({ title: "Test blog", author: "Test author", url: "Test url", likes: 5 })
-  await blog.save()
+  const loginInformation = await api
+    .post('/api/login')
+    .send({ username: "ali", password: "simple" })
+    .expect(200)
+
+  await api
+    .post('/api/blogs')
+    .set({ Authorization: `Bearer ${loginInformation.body.token}` })
+    .send({ title: "Test blog", author: "Test author", url: "Test url", likes: 5 })
+    .expect(201)
 
   const newBlogs = await Blog.find({})
   const titles = newBlogs.map(b => b.title);
@@ -49,8 +58,15 @@ test('check the default value of likes', async () => {
 })
 
 test('check the existence of title and url properties', async () => {
+
+  const loginInformation = await api
+    .post('/api/login')
+    .send({ username: "ali", password: "simple"})
+    .expect(200)
+
   await api
     .post('/api/blogs')
+    .set({ Authorization: `Bearer ${loginInformation.body.token}` })
     .send({ author: "Test author", likes: 20 })
     .expect(400)
 })
