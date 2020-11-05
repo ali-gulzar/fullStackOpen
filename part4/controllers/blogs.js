@@ -36,7 +36,7 @@ blogRouter.post('/', async (request, response) => {
         response.status(404).json(e)
     }
 
-    if (blog.url === undefined || blog.title === undefined) {
+    if (blog.url === '' || blog.title === '') {
         response.status(400).json({error: "url and title are not defined"})
     } else {
         await blog.save()
@@ -52,7 +52,8 @@ blogRouter.put('/:id', async (request, response) => {
         title: body.title,
         author: body.author,
         url: body.url,
-        likes: body.likes
+        likes: body.likes,
+        user: body.user
     }
     const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
     response.json(updatedBlog)
@@ -68,13 +69,21 @@ blogRouter.delete('/:id', async (request, response) => {
         return response.status(401).json({ error: 'Invalid token!' })
     }
 
-    const blog = await Blog.findById(request.params.id)
-    if (blog.user.toString() === decodedToken.id) {
-        Blog.findByIdAndDelete(request.params.id)
-        response.status(201)
-    } else {
-        return response.status(404).json({error: "User not authorized to delete the blog"})
+    try {
+        const blog = await Blog.findById(request.params.id)
+        if (blog.user.toString() === decodedToken.id) {
+            const res = await Blog.findByIdAndDelete(request.params.id)
+            const user = await User.findById(decodedToken.id)
+            user.blogs = user.blogs.filter(blogId => blogId.toString() !== request.params.id)
+            await user.save()
+            response.status(201)
+        } else {
+            response.status(404).json({error: "User not authorized to delete the blog"})
+        }
+    } catch {
+        response.status(404).json({error: "Can not find the blog"})
     }
+    
 })
 
 module.exports = blogRouter;

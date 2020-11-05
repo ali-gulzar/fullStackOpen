@@ -13,7 +13,6 @@ const getAll = () => {
 }
 
 const createNew = data => {
-
   const config = {
     headers: { Authorization: token },
   }
@@ -21,4 +20,18 @@ const createNew = data => {
   return response
 }
 
-export default { getAll, createNew, setToken }
+const updateLikes = (data, blogId) => {
+  const response = axios.put(`${baseUrl}/${blogId}`, data)
+  return response
+}
+
+const deletePost = blogId => {
+  const config = {
+    headers: { Authorization: token },
+  }
+  const response = axios.delete(`${baseUrl}/${blogId}`, config)
+  return response
+}
+
+// eslint-disable-next-line import/no-anonymous-default-export
+export default { getAll, createNew, setToken, updateLikes, deletePost }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import BlogForm from './components/BlogForm';
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -9,11 +10,7 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [blog, setBlog] = useState({
-    title: '',
-    author: '',
-    url: ''
-  })
+  const [addBlog, setAddBlog] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -57,27 +54,27 @@ const App = () => {
     return (
       <>
       <h1>Login Form</h1>
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          password
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">login</button>
-      </form>
+        <form onSubmit={handleLogin}>
+          <div>
+            username
+            <input
+              type="text"
+              value={username}
+              name="Username"
+              onChange={({ target }) => setUsername(target.value)}
+            />
+          </div>
+          <div>
+            password
+            <input
+              type="password"
+              value={password}
+              name="Password"
+              onChange={({ target }) => setPassword(target.value)}
+            />
+          </div>
+          <button type="submit">login</button>
+        </form>
       </>
     )
   }
@@ -93,62 +90,17 @@ const App = () => {
       setPassword('')
     }
 
-    const handleCreateNewBlog = (event) => {
-      event.preventDefault();
-      blogService.createNew(blog).then((response) => {
-        if (response.status === 201) {
-          setMessage("Blog created")
-          setBlog({title: '', author: '', url: ''})
-        } else {
-          setMessage("Failed to create a blog")
-        }
-        setTimeout(() => {
-          setMessage(null)
-        }, 2000);
-      })
-    }
-
     return (
       <>
       <h2>blogs</h2>
-      <p>{user.name} logged in</p> <button onClick={handleLogOut}>logout</button>
-      <h2>create new</h2>
-
-        <form onSubmit={handleCreateNewBlog}>
-          <div>
-            title
-            <input
-              type="text"
-              value={blog.title}
-              name="Title"
-              onChange={({ target }) => setBlog({...blog, title: target.value})}
-            />
-          </div>
-          <div>
-            author
-            <input
-              type="text"
-              value={blog.author}
-              name="Author"
-              onChange={({ target }) => setBlog({...blog, author: target.value})}
-            />
-          </div>
-          <div>
-            url
-            <input
-              type="text"
-              value={blog.url}
-              name="URL"
-              onChange={({ target }) => setBlog({...blog, url: target.value})}
-            />
-          </div>
-          <button type="submit">add new</button>
-        </form>
-      <ul>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-        )}
-      </ul>
+      <p>{user ? user.name : ''} logged in</p>
+      <div>
+        <button onClick={handleLogOut}>logout</button>
+      </div>
+      {addBlog ? <BlogForm toggleForm={() => setAddBlog(false)} setMessage={(value) => setMessage(value)} /> : <button onClick={() => setAddBlog(true)}>add new</button>}
+      {blogs.sort((a,b) => b.likes - a.likes).map(blog =>
+        <Blog key={blog.id} blog={blog} setMessage={(value) => setMessage(value)} user={user}/>
+      )}
       </>
     )
   }
