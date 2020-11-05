@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import blogService from '../services/blogs';
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 
+import blogService from '../services/blogs'
 
 const Blog = ({ blog, setMessage, user }) => {
 
@@ -9,37 +10,37 @@ const Blog = ({ blog, setMessage, user }) => {
   const details = (blog) => {
 
     const updateLikes = async () => {
-      const response = await blogService.updateLikes({...blog, likes: blog.likes + 1, user: blog.user.id}, blog.id)
-      blog = response.data.data;
-      setMessage("Blog liked")
+      const response = await blogService.updateLikes({ ...blog, likes: blog.likes + 1, user: blog.user.id }, blog.id)
+      blog = response.data.data
+      setMessage('Blog liked')
       setTimeout(() => {
         setMessage(null)
-      }, 2000);
+      }, 2000)
     }
 
     const deleteBlog = async () => {
       if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
         const response = await blogService.deletePost(blog.id)
         if (response.status === 201) {
-          setMessage("Blog delete")
+          setMessage('Blog delete')
           setTimeout(() => {
             setMessage(null)
-          }, 2000);
+          }, 2000)
         } else {
-          setMessage("Failed to delete a blog")
+          setMessage('Failed to delete a blog')
           setTimeout(() => {
             setMessage(null)
-          }, 2000);
+          }, 2000)
         }
       }
     }
 
     return (
       <>
-      <p>{blog.url}</p>
-      <p>{blog.likes}<button onClick={updateLikes}>like</button></p>
-      <p>{blog.author}</p>
-      {user.username === blog.user.username ? <button onClick={deleteBlog}>delete</button> : ''}
+        <p>{blog.url}</p>
+        <p>{blog.likes}<button onClick={updateLikes}>like</button></p>
+        <p>{blog.author}</p>
+        {user.username === blog.user.username ? <button onClick={deleteBlog}>delete</button> : ''}
       </>
     )
   }
@@ -59,6 +60,12 @@ const Blog = ({ blog, setMessage, user }) => {
     </div>
   )
 
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  setMessage: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired
 }
 
 export default Blog

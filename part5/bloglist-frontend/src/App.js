@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import BlogForm from './components/BlogForm';
+import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -20,40 +20,39 @@ const App = () => {
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedInUser')
-      if (loggedUserJSON) {
-        const user = JSON.parse(loggedUserJSON)
-        blogService.setToken(user.token)
-        setUser(user)
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      blogService.setToken(user.token)
+      setUser(user)
     }
   }, [])
 
   const loginForm = () => {
 
     const handleLogin = async (event) => {
-      event.preventDefault();
+      event.preventDefault()
       try {
-        const user = await loginService.login({username, password})
+        const user = await loginService.login({ username, password })
         blogService.setToken(user.token)
         window.localStorage.setItem(
           'loggedInUser', JSON.stringify(user)
         )
         setUser(user)
-        setMessage("Logged in successfully")
+        setMessage('Logged in successfully')
         setTimeout(() => {
           setMessage(null)
-        }, 2000);
-      } catch {
-        setMessage("Logged in failed")
+        }, 2000)
+      } catch (e) {
+        setMessage('Logged in failed')
         setTimeout(() => {
           setMessage(null)
-        }, 2000);
+        }, 2000)
       }
-
     }
 
     return (
       <>
-      <h1>Login Form</h1>
+        <h1>Login Form</h1>
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -92,15 +91,15 @@ const App = () => {
 
     return (
       <>
-      <h2>blogs</h2>
-      <p>{user ? user.name : ''} logged in</p>
-      <div>
-        <button onClick={handleLogOut}>logout</button>
-      </div>
-      {addBlog ? <BlogForm toggleForm={() => setAddBlog(false)} setMessage={(value) => setMessage(value)} /> : <button onClick={() => setAddBlog(true)}>add new</button>}
-      {blogs.sort((a,b) => b.likes - a.likes).map(blog =>
-        <Blog key={blog.id} blog={blog} setMessage={(value) => setMessage(value)} user={user}/>
-      )}
+        <h2>blogs</h2>
+        <p>{user ? user.name : ''} logged in</p>
+        <div>
+          <button onClick={handleLogOut}>logout</button>
+        </div>
+        {addBlog ? <BlogForm toggleForm={() => setAddBlog(false)} setMessage={(value) => setMessage(value)} /> : <button onClick={() => setAddBlog(true)}>add new</button>}
+        {blogs.sort((a,b) => b.likes - a.likes).map(blog =>
+          <Blog key={blog.id} blog={blog} setMessage={(value) => setMessage(value)} user={user}/>
+        )}
       </>
     )
   }
