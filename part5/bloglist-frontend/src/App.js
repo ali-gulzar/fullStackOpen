@@ -57,6 +57,7 @@ const App = () => {
                     <div>
             username
                         <input
+                            id="username"
                             type="text"
                             value={username}
                             name="Username"
@@ -66,6 +67,7 @@ const App = () => {
                     <div>
             password
                         <input
+                            id="password"
                             type="password"
                             value={password}
                             name="Password"
@@ -94,9 +96,9 @@ const App = () => {
                 <h2>blogs</h2>
                 <p>{user ? user.name : ''} logged in</p>
                 <div>
-                    <button onClick={handleLogOut}>logout</button>
+                    <button className="logoutButton" onClick={handleLogOut}>logout</button>
                 </div>
-                {addBlog ? <BlogForm toggleForm={() => setAddBlog(false)} setMessage={(value) => setMessage(value)} createBlog={blogService.createNew} /> : <button onClick={() => setAddBlog(true)}>add new</button>}
+                {addBlog ? <BlogForm toggleForm={() => setAddBlog(false)} setMessage={(value) => setMessage(value)} createBlog={() => console.log('creating blog')} /> : <button onClick={() => setAddBlog(true)} className="addBlogButton">add new</button>}
                 {blogs.sort((a,b) => b.likes - a.likes).map(blog =>
                     <Blog key={blog.id} blog={blog} setMessage={(value) => setMessage(value)} user={user}/>
                 )}

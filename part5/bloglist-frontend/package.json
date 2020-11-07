@@ -18,7 +18,8 @@
     "build": "react-scripts build",
     "test": "CI=true react-scripts test --forceExit",
     "eject": "react-scripts eject",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "cypress:open": "cypress open"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -35,5 +36,9 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:3001"
+  "proxy": "http://localhost:3001",
+  "devDependencies": {
+    "cypress": "^5.5.0",
+    "eslint-plugin-cypress": "^2.11.2"
+  }
 }

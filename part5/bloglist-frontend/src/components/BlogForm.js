@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import blogService from '../services/blogs'
 
 const BlogForm = ({ toggleForm, setMessage, createBlog }) => {
 
@@ -10,9 +11,8 @@ const BlogForm = ({ toggleForm, setMessage, createBlog }) => {
 
     const handleCreateNewBlog = async (event) => {
         event.preventDefault()
-        const createdBlog = await createBlog(blog)
-
-        createdBlog.then((response) => {
+        createBlog()
+        blogService.createNew(blog).then((response) => {
             if (response.status === 201) {
                 setMessage('Blog created')
                 setBlog({ title: '', author: '', url: '' })
@@ -65,7 +65,7 @@ const BlogForm = ({ toggleForm, setMessage, createBlog }) => {
                         onChange={({ target }) => setBlog({ ...blog, url: target.value })}
                     />
                 </div>
-                <button type="submit">add</button>
+                <button className="addItButton" type="submit">add</button>
                 <button onClick={toggleForm}>cancel</button>
             </form>
         </>

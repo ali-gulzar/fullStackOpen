@@ -38,9 +38,9 @@ const Blog = ({ blog, setMessage, user }) => {
         return (
             <div className="detailsDiv">
                 <p>{blog.url}</p>
-                <p className="likes">{blog.likes}<button onClick={updateLikes}>like</button></p>
+                <p className="likeContainer">{blog.likes}<button onClick={updateLikes} className="likeButton">like</button></p>
                 <p>{blog.author}</p>
-                {user.username === blog.user.username ? <button onClick={deleteBlog}>delete</button> : ''}
+                {user.username === blog.user.username ? <button className="deleteButton" onClick={deleteBlog}>delete</button> : ''}
             </div>
         )
     }
@@ -55,7 +55,7 @@ const Blog = ({ blog, setMessage, user }) => {
 
     return (
         <div style={blogStyle} className="blogDiv">
-            <p>{blog.title} <button onClick={() => showDetail ? setShowDetail(false) : setShowDetail(true)}>{showDetail ? 'hide' : 'show'}</button></p>
+            <p>{blog.title} <button className="showBlogButton" onClick={() => showDetail ? setShowDetail(false) : setShowDetail(true)}>{showDetail ? 'hide' : 'show'}</button></p>
             {showDetail ? details(blog) : ''}
         </div>
     )
