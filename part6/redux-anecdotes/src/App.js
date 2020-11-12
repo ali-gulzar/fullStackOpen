@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import anectodeService from './services/anectodes'
 import { initData } from './reducers/anecdoteReducer' 
 
 import AnectodeList from './components/AnectodeList'
@@ -12,7 +11,7 @@ const App = () => {
 
   const dispatch = useDispatch()
   useEffect(() => {
-    anectodeService.getAll().then(anectodes => dispatch(initData(anectodes)))
+    dispatch(initData())
   },[dispatch])
 
   return (

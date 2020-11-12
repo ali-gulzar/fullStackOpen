@@ -10,12 +10,9 @@ const AnectodeList = () => {
     
     const dispatch = useDispatch()
 
-    const voteAnectodeAndDisplayMessage = (id, content) => {
-        dispatch(voteAction(id))
-        dispatch(setMessage(`you voted ${content}`))
-        setTimeout(() => {
-            dispatch(setMessage(null)) 
-        }, 5000);
+    const voteAnectodeAndDisplayMessage = (id, content, votes) => {
+        dispatch(voteAction(id, {content, votes}))
+        dispatch(setMessage(`you voted ${content}`, 1000))
     }
 
     return (
@@ -27,7 +24,7 @@ const AnectodeList = () => {
             </div>
             <div>
                 has {anecdote.votes}
-                <button onClick={() => voteAnectodeAndDisplayMessage(anecdote.id, anecdote.content)}>vote</button>
+                <button onClick={() => voteAnectodeAndDisplayMessage(anecdote.id, anecdote.content, anecdote.votes + 1)}>vote</button>
             </div>
             </div>
         )}

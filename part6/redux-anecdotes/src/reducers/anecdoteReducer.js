@@ -1,4 +1,4 @@
-const getId = () => (100000 * Math.random()).toFixed(0)
+import anectodeService from '../services/anectodes'
 
 const sortAnectodes = (a,b) => {
   if (a.votes > b.votes) return -1
@@ -13,36 +13,43 @@ const reducer = (state = [], action) => {
     case 'ADD':
       return [...state, action.data.content].sort(sortAnectodes)
     case 'INIT':
-      return action.data.anecdotes
+      return action.data
     default:
       return state.sort(sortAnectodes)
   }
 }
 
-export const voteAction = (id) => {
-  return {
-    type: 'VOTE',
-    data: {
-      id
-    }
+export const voteAction = (id, data) => {
+  return async dispatch => {
+    const response = await anectodeService.updateData(id, data)
+    dispatch({
+      type: 'VOTE',
+      data: {
+        id: response.id
+      }
+    })
   }
 }
 
 export const addAction = (content) => {
-  return {
-    type: 'ADD',
-    data: {
-      content
-    }
+  return async dispatch => {
+    const response = await anectodeService.postData({content, votes: 0})
+    dispatch({
+      type: 'ADD',
+      data: {
+        content: response
+      }
+    })
   }
 }
 
-export const initData = (anecdotes) => {
-  return {
-    type: 'INIT',
-    data: {
-      anecdotes
-    }
+export const initData = () => {
+  return async dispatch => {
+    const anecdotes = await anectodeService.getAll()
+    dispatch({
+      type: 'INIT',
+      data: anecdotes
+    })
   }
 }
 

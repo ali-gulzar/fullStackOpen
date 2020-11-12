@@ -1,18 +1,24 @@
 const reducer = (state = null, action) => {
     switch(action.type) {
         case('SETMESSAGE'):
-            return action.data.message
+            return action.message
         default:
             return state
     }
 }
 
-export const setMessage = (message) => {
-    return {
-        type: 'SETMESSAGE',
-        data: {
+export const setMessage = (message, timeout) => {
+    return dispatch => {
+        dispatch({
+            type: 'SETMESSAGE',
             message
-        }
+        })
+        setTimeout(() => {
+            dispatch({
+                type: 'SETMESSAGE',
+                message: null
+            })
+        }, timeout);
     }
 }
 
