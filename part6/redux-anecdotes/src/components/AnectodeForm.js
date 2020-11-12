@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { addAction } from '../reducers/anecdoteReducer'
+import { setMessage } from '../reducers/notificationReducer'
 
 const AnectodeForm = () => {
 
@@ -11,6 +12,10 @@ const AnectodeForm = () => {
         const content = event.target.content.value
         event.target.content.value = ''
         dispatch(addAction(content))
+        dispatch(setMessage(`you added ${content}`))
+        setTimeout(() => {
+            dispatch(setMessage(null))
+        },5000)
     }
 
     return (
