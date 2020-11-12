@@ -2,10 +2,10 @@ import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { initData } from './reducers/anecdoteReducer' 
 
-import AnectodeList from './components/AnectodeList'
+import ConnectAnectodeList from './components/AnectodeList'
 import AnectodeForm from './components/AnectodeForm'
-import Notification from './components/Notification'
-import Filter from './components/Filter'
+import ConnectNotification from './components/Notification'
+import ConnectFilter from './components/Filter'
 
 const App = () => {
 
@@ -17,9 +17,9 @@ const App = () => {
   return (
     <div>
       <h2>Anecdotes</h2>
-      <Notification />
-      <Filter />
-      <AnectodeList />
+      <ConnectNotification />
+      <ConnectFilter />
+      <ConnectAnectodeList />
       <AnectodeForm />
     </div>
   )

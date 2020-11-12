@@ -13,7 +13,7 @@ const AnectodeForm = () => {
         event.target.content.value = ''
         
         dispatch(addAction(content))
-        dispatch(setMessage(`you added ${content}`, 1000))
+        dispatch(setMessage(`you added ${content}`, 1000, null))
     }
 
     return (

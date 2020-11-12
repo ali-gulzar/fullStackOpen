@@ -1,17 +1,16 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { setValue } from '../reducers/filterReducer'
 
-const Filter = () => {
-
-    const dispatch = useDispatch()
+const Filter = (props) => {
 
     const filterNotes = (event) => {
-        dispatch(setValue(event.target.value))
+        props.setValue(event.target.value)
     }
 
     return <p>filter <input onChange={filterNotes}/></p>
 }
 
+const ConnectFilter = connect(null, {setValue})(Filter)
 
-export default Filter
+export default ConnectFilter
