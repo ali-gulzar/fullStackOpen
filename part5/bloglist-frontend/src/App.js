@@ -3,14 +3,18 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import BlogForm from './components/BlogForm'
+import { useSelector, useDispatch } from 'react-redux'
+import { setMessage } from './reducers/notificationReducer'
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
-    const [message, setMessage] = useState(null)
     const [user, setUser] = useState(null)
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [addBlog, setAddBlog] = useState(false)
+
+    const message = useSelector(state => state)
+    const dispatch = useDispatch()
 
     useEffect(() => {
         blogService.getAll().then(blogs =>
@@ -38,14 +42,14 @@ const App = () => {
                     'loggedInUser', JSON.stringify(user)
                 )
                 setUser(user)
-                setMessage('Logged in successfully')
+                dispatch(setMessage('Logged in successfully'))
                 setTimeout(() => {
-                    setMessage(null)
+                    dispatch(setMessage(''))
                 }, 2000)
             } catch (e) {
-                setMessage('Logged in failed')
+                dispatch(setMessage('Logged in failed'))
                 setTimeout(() => {
-                    setMessage(null)
+                    setMessage('')
                 }, 2000)
             }
         }
@@ -98,9 +102,9 @@ const App = () => {
                 <div>
                     <button className="logoutButton" onClick={handleLogOut}>logout</button>
                 </div>
-                {addBlog ? <BlogForm toggleForm={() => setAddBlog(false)} setMessage={(value) => setMessage(value)} createBlog={() => console.log('creating blog')} /> : <button onClick={() => setAddBlog(true)} className="addBlogButton">add new</button>}
+                {addBlog ? <BlogForm toggleForm={() => setAddBlog(false)} createBlog={() => console.log('creating blog')} /> : <button onClick={() => setAddBlog(true)} className="addBlogButton">add new</button>}
                 {blogs.sort((a,b) => b.likes - a.likes).map(blog =>
-                    <Blog key={blog.id} blog={blog} setMessage={(value) => setMessage(value)} user={user}/>
+                    <Blog key={blog.id} blog={blog} user={user}/>
                 )}
             </>
         )
@@ -108,7 +112,7 @@ const App = () => {
 
     return (
         <div>
-            {message === null ? <p></p> : <p>{message}</p>}
+            <p>{message}</p>
             {user === null ? loginForm() : blogList() }
         </div>
     )
