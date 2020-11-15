@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const BlogForm = ({ toggleForm, setMessage, createBlog }) => {
+import { useDispatch } from 'react-redux'
+import { setMessage } from '../reducers/notificationReducer'
+
+const BlogForm = ({ toggleForm, createBlog }) => {
 
     const [blog, setBlog] = useState({
         title: '',
@@ -9,24 +12,26 @@ const BlogForm = ({ toggleForm, setMessage, createBlog }) => {
         url: ''
     })
 
+    const dispatch = useDispatch()
+
     const handleCreateNewBlog = async (event) => {
         event.preventDefault()
         createBlog()
         blogService.createNew(blog).then((response) => {
             if (response.status === 201) {
-                setMessage('Blog created')
+                dispatch(setMessage('Blog created'))
                 setBlog({ title: '', author: '', url: '' })
             } else {
-                setMessage('Failed to create a blog')
+                dispatch(setMessage('Failed to create a blog'))
             }
             setTimeout(() => {
-                setMessage(null)
+                dispatch(setMessage(''))
             }, 2000)
         })
             .catch(() => {
-                setMessage('Failed to create a blog')
+                dispatch(setMessage('Failed to create a blog'))
                 setTimeout(() => {
-                    setMessage(null)
+                    dispatch(setMessage(''))
                 }, 2000)
             })
     }
