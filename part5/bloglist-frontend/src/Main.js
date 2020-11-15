@@ -8,6 +8,7 @@ import { setMessage } from './reducers/notificationReducer'
 import { initData } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
 import { Switch, Route, useRouteMatch } from 'react-router-dom'
+import { Button, TextField } from '@material-ui/core'
 
 const Details = ({ blog }) => {
 
@@ -102,17 +103,15 @@ const Main = () => {
                 <form onSubmit={handleLogin}>
                     <div>
             username
-                        <input
-                            id="username"
+                        <TextField id="username"
                             type="text"
                             value={username}
                             name="Username"
-                            onChange={({ target }) => setUsername(target.value)}
-                        />
+                            onChange={({ target }) => setUsername(target.value)} />
                     </div>
                     <div>
             password
-                        <input
+                        <TextField
                             id="password"
                             type="password"
                             value={password}
@@ -120,7 +119,7 @@ const Main = () => {
                             onChange={({ target }) => setPassword(target.value)}
                         />
                     </div>
-                    <button type="submit">login</button>
+                    <Button variant="contained" color="primary" type="sumbit">login</Button>
                 </form>
             </>
         )

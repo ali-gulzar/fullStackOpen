@@ -3,27 +3,44 @@ import Main from './Main'
 import User from './components/User'
 import userService from './services/users'
 import { Link, Switch, Route, useRouteMatch } from 'react-router-dom'
+import { makeStyles } from '@material-ui/core/styles'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableContainer from '@material-ui/core/TableContainer'
+import TableRow from '@material-ui/core/TableRow'
+import Paper from '@material-ui/core/Paper'
 
 const Users = ({ users }) => {
+
+    const useStyles = makeStyles({
+        table: {
+            minWidth: 650,
+        }
+    })
+
+    const classes = useStyles()
 
     return (
         <div>
             <h1>Users</h1>
-            <table>
-                <tbody>
-                    <tr><td>Name</td><td>Blogs</td></tr>
-                </tbody>
-                {users.map(user => {
-                    return (
-                        <tbody key={user.id}>
-                            <tr>
-                                <Link to={`/users/${user.id}`} ><td>{user.name}</td></Link>
-                                <td>{user.blogs.length}</td>
-                            </tr>
-                        </tbody>
-                    )
-                })}
-            </table>
+            <TableContainer component={Paper}>
+                <Table className={classes.table} aria-label="simple table">
+                    <TableBody>
+                        <TableRow><TableCell>Name</TableCell><TableCell>Blogs</TableCell></TableRow>
+                    </TableBody>
+                    {users.map(user => {
+                        return (
+                            <TableBody key={user.id}>
+                                <TableRow>
+                                    <TableCell><Link to={`/users/${user.id}`}>{user.name}</Link></TableCell>
+                                    <TableCell>{user.blogs.length}</TableCell>
+                                </TableRow>
+                            </TableBody>
+                        )
+                    })}
+                </Table>
+            </TableContainer>
         </div>
     )
 }
