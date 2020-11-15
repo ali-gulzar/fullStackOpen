@@ -7,6 +7,49 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setMessage } from './reducers/notificationReducer'
 import { initData } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
+import { Switch, Route, useRouteMatch } from 'react-router-dom'
+
+const Details = ({ blog }) => {
+
+    if (!blog) return null
+
+    const dispatch = useDispatch()
+
+    const updateLikes = async () => {
+        const response = await blogService.updateLikes({ ...blog, likes: blog.likes + 1, user: blog.user.id }, blog.id)
+        blog = response.data.data
+        dispatch(setMessage('Blog liked'))
+        setTimeout(() => {
+            dispatch(setMessage(''))
+        }, 2000)
+    }
+
+    // const deleteBlog = async () => {
+    //     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+    //         const response = await blogService.deletePost(blog.id)
+    //         if (response.status === 201) {
+    //             dispatch(setMessage('Blog deleted'))
+    //             setTimeout(() => {
+    //                 dispatch(setMessage(''))
+    //             }, 2000)
+    //         } else {
+    //             dispatch(setMessage('Failed to delete a blog'))
+    //             setTimeout(() => {
+    //                 dispatch(setMessage(''))
+    //             }, 2000)
+    //         }
+    //     }
+    // }
+
+    return (
+        <div className="detailsDiv">
+            <h1>{blog.title}</h1>
+            <p>{blog.url}</p>
+            <p className="likeContainer">{blog.likes}<button onClick={updateLikes} className="likeButton">like</button></p>
+            <p>added by {blog.author}</p>
+        </div>
+    )
+}
 
 const Main = () => {
     const [username, setUsername] = useState('')
@@ -94,17 +137,30 @@ const Main = () => {
             setPassword('')
         }
 
+        const blogById = id => blogs.find(b => b.id === id)
+
+        const match = useRouteMatch('/blog/:id')
+        const detailBlog = match ?  blogById(match.params.id) : null
+
         return (
             <>
                 <h2>blogs</h2>
                 <p>{user ? user.name : ''} logged in</p>
-                <div>
-                    <button className="logoutButton" onClick={handleLogOut}>logout</button>
-                </div>
-                {addBlog ? <BlogForm toggleForm={() => setAddBlog(false)} createBlog={() => console.log('creating blog')} /> : <button onClick={() => setAddBlog(true)} className="addBlogButton">add new</button>}
-                {blogs.sort((a,b) => b.likes - a.likes).map(blog =>
-                    <Blog key={blog.id} blog={blog} user={user}/>
-                )}
+                <Switch>
+                    <Route path="/blog/:id">
+                        <Details blog={detailBlog} />
+                    </Route>
+                    <Route path="/">
+                        <div>
+                            <button className="logoutButton" onClick={handleLogOut}>logout</button>
+                        </div>
+                        {addBlog ? <BlogForm toggleForm={() => setAddBlog(false)} createBlog={() => console.log('creating blog')} /> : <button onClick={() => setAddBlog(true)} className="addBlogButton">add new</button>}
+                        {blogs.sort((a,b) => b.likes - a.likes).map(blog =>
+                            <Blog key={blog.id} blog={blog} user={user}/>
+                        )}
+                    </Route>
+                </Switch>
+
             </>
         )
     }
