@@ -18,6 +18,22 @@ export const GET_ALL_BOOKS = gql`
                 name
             }
             published
+            genres
+        }
+    }
+`
+
+export const GET_ALL_GENRE = gql`
+    query {
+        getAllGenre
+    }
+`
+
+export const GET_FAVORITE_GENRE = gql`
+    query {
+        me {
+            username
+            favoriteGenre
         }
     }
 `

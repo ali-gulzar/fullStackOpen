@@ -19,10 +19,10 @@ export const ADD_BOOK = gql`
 `
 
 export const SET_BIRTH_DATA = gql`
-    mutation ($name: String!, $setBornTo: Int!) {
+    mutation ($name: String!, $born: Int!) {
         editAuthor(
             name: $name,
-            setBornTo: $setBornTo
+            born: $born
         ) {
             name
             born

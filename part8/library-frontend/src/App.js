@@ -5,9 +5,10 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Login from './components/Login'
+import Recommended from './components/Recommended'
 
 const App = () => {
-  const [page, setPage] = useState('authors')
+  const [page, setPage] = useState('books')
   const [token, setToken] = useState(null)
   const [message, setMessage] = useState('')
   const client = useApolloClient()
@@ -20,7 +21,7 @@ const App = () => {
     setMessage(value)
     setTimeout(() => {
         setMessage('')
-    }, 2000);
+    }, 5000);
   }
 
   const logout = () => {
@@ -39,12 +40,21 @@ const App = () => {
     }, 2000);
   }
 
+  const renderLoggedInView = () => {
+    return (
+      <>
+        <button onClick={() => setPage('add')}>add book</button>
+        <button onClick={() => setPage('recommended')}>recommended</button>
+      </>
+    )
+  }
+
   return (
     <div>
       <div>
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
-        {token ? <button onClick={() => setPage('add')}>add book</button>: ''}
+        {token ? renderLoggedInView() : ''}
         <button onClick={() => token ? logout() : setPage('login')}>{token ? "logout" : "login"}</button>
       </div>
 
@@ -62,6 +72,11 @@ const App = () => {
 
       <NewBook
         show={page === 'add'}
+        setMessage={(value) => displayNotification(value)}
+      />
+
+      <Recommended
+        show={page === 'recommended'}
         setMessage={(value) => displayNotification(value)}
       />
 

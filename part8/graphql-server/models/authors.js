@@ -11,6 +11,10 @@ const schema = new mongoose.Schema({
     type: Number,
     default: null
   },
+  bookCount: {
+    type: Number,
+    require: true
+  }
 })
 
 module.exports = mongoose.model('Author', schema)

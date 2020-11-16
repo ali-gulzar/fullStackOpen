@@ -43,6 +43,7 @@ const typeDefs = gql`
         resetBooks: String
         resetAuthors: String
         resetUsers: String
+        getAllGenre: [String!]
         me: User
     }
     type Mutation {
@@ -56,8 +57,8 @@ const typeDefs = gql`
         name: String!
         born: Int
       ): Author
-      editAuthor(name: String!, setBornTo: Int!): Author
-      createUser(username: String!, favoriteGenre: String): User
+      editAuthor(name: String!, born: Int!): Author
+      createUser(username: String!, favoriteGenre: String!): User
       login(username: String!, password: String!): Token!
     }
 `
@@ -93,6 +94,14 @@ const resolvers = {
           await User.deleteMany({})
           return "Users database reset done!"
         },
+        getAllGenre: async() => {
+          const books = await Book.find({})
+          let genres = []
+          Promise.all(books.map(book => {
+            book.genres.map(genre => genres.push(genre))
+          }))
+          return [...new Set(genres)]
+        },
         me: (root, args, context) => {
           return context.currentUser
         }
@@ -105,11 +114,14 @@ const resolvers = {
 
         let author = await Author.findOne({ name: args.author })
         if (!author) {
-          author = new Author({name: args.author})
-          await author.save()
+          author = new Author({name: args.author, bookCount: 1})
+        } else {
+          author.bookCount = author.bookCount + 1
         }
+
         const book = new Book({...args, author})
         try {
+          await author.save()
           await book.save()
         } catch(error) {
           throw new UserInputError(error.message, {
@@ -136,7 +148,7 @@ const resolvers = {
 
         const author = await Author.findOne({ name: args.name })
         if (author) {
-          author.born = args.setBornTo
+          author['born'] = args.born
           return author.save()
         }
         return null

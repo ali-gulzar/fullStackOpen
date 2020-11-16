@@ -5,31 +5,31 @@ import { SET_BIRTH_DATA } from '../graphql/mutations'
 
 const Authors = (props) => {
 
-  const [name, setName] = useState('')
+  const [name, setName] = useState('select a name')
   const [year, setYear] = useState('')
   const results = useQuery(GET_ALL_AUTHORS)
   const [update, result] = useMutation(SET_BIRTH_DATA, {
-    refetchQueries: [ {query: GET_ALL_AUTHORS }]
+    refetchQueries: [ {query: GET_ALL_AUTHORS }],
+    onError: (error) => props.setMessage(error.graphQLErrors[0].message)
   })
 
   const updateAuthor = (event) => {
     event.preventDefault()
 
-    const numberYear = Number(year)
-    update({ variables: { name, setBornTo: numberYear } })
-
-    if (result.data && result.data.editAuthor === null) {
-      console.log("Person not found")
-    }
-    setName('')
+    update({ variables: { name, born: Number(year) } }).then(() => {
+      if (result.data === undefined) {
+        props.setMessage("peron not found")
+      } else {
+        props.setMessage("person updated.")
+      }
+    }).catch(error => console.log(error))
     setYear('')
-
   }
 
-  if (!props.show || results.loading) {
+  if (!props.show || results.loading || results.data === undefined) {
     return null
   }
-  
+
   return (
     <div>
       <h2>authors</h2>
@@ -56,8 +56,9 @@ const Authors = (props) => {
       <h2>Set birthyear</h2>
       <form onSubmit={updateAuthor}>
         <select value={name} onChange={(event) => setName(event.target.value)}>
+          <option value="select a name">Select a name</option>
           {results.data.allAuthors.map(a =>
-            <option value={a.name}>{a.name}</option>
+            <option key={a.name} value={a.name}>{a.name}</option>
           )}
         </select>
         <div>
