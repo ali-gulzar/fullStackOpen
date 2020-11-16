@@ -5,7 +5,8 @@
   "author": "Muhammad Ali Gulzar",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon library-backend.js"
+    "start": "node library-backend.js",
+    "dev": "nodemon library-backend.js"
   },
   "dependencies": {
     "apollo-server": "^2.19.0",
