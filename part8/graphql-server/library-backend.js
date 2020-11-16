@@ -94,7 +94,6 @@ const resolvers = {
           return "Users database reset done!"
         },
         me: (root, args, context) => {
-          console.log(context)
           return context.currentUser
         }
     },
@@ -104,8 +103,11 @@ const resolvers = {
         const currentUser = context.currentUser
         if (!currentUser) throw new AuthenticationError("Authentication errror.")
 
-        const author = await Author.findOne({ name: args.author })
-        if (!author) return null
+        let author = await Author.findOne({ name: args.author })
+        if (!author) {
+          author = new Author({name: args.author})
+          await author.save()
+        }
         const book = new Book({...args, author})
         try {
           await book.save()
@@ -157,8 +159,6 @@ const resolvers = {
           throw new UserInputError("wrong credentials")
         }
 
-        console.log(user)
-
         const userForToken = {
           username: args.username,
           id: user._id
@@ -174,13 +174,11 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
     context: async ({ req }) => {
-      console.log(req.headers.authorization)
       const auth = req ? req.headers.authorization : null
       if (auth && auth.toLowerCase().startsWith('bearer ')) {
         const decodedToken = jwt.verify(
           auth.substring(7), "SECRET_STRING"
         )
-        console.log("decoded token", decodedToken)
         const currentUser = await User.findById(decodedToken.id)
         return { currentUser }
       }
