@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { useApolloClient } from '@apollo/client'
+import { useApolloClient, useSubscription } from '@apollo/client'
+import { BOOK_ADDED } from './graphql/subscription'
+import { GET_ALL_BOOKS } from './graphql/queries'
 
 import Authors from './components/Authors'
 import Books from './components/Books'
@@ -16,6 +18,32 @@ const App = () => {
   useEffect(() => {
     setToken(localStorage.getItem('user-token'))
   },[])
+
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (data, object) => {
+      data.map(p => p.id).includes(object.id) 
+    } 
+
+
+    const dataInStore = client.readQuery({ query: GET_ALL_BOOKS })
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      client.writeQuery({
+        query: GET_ALL_BOOKS,
+        data: { allBooks : dataInStore.allBooks.concat(addedBook) }
+      })
+    }   
+  }
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const addedBook = subscriptionData.data.bookAdded
+      setMessage(`${addedBook.title} added!`)
+      setTimeout(() => {
+        setMessage('')
+      }, 2000)
+      updateCacheWith(addedBook)
+    }
+  })
 
   const displayNotification = (value) => {
     setMessage(value)
