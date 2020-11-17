@@ -32,7 +32,6 @@ export const GET_ALL_GENRE = gql`
 export const GET_FAVORITE_GENRE = gql`
     query {
         me {
-            username
             favoriteGenre
         }
     }
