@@ -11,15 +11,15 @@ interface Result {
 const parseArguments = (args: Array<string>): Array<number> => {
     if (args.length !== 12) throw new Error("Invalid amount of arguments");
     
-    const bmiValues = args.slice(2)
+    const bmiValues = args.slice(2);
     bmiValues.map(arg => {
-        if (isNaN(Number(arg))) throw new Error('Provided values were not numbers!')
-    })
-    const values = bmiValues.map(value => Number(value))
-    return values
-}
+        if (isNaN(Number(arg))) throw new Error('Provided values were not numbers!');
+    });
+    const values = bmiValues.map(value => Number(value));
+    return values;
+};
   
-const calculateExercises = (values: Array<number>, target: number): Result => {
+export const calculateExercises = (values: Array<number>, target: number): Result => {
 
     return {
         periodLength: values.length,
@@ -29,12 +29,13 @@ const calculateExercises = (values: Array<number>, target: number): Result => {
         ratingDescription: "Well done Ali!",
         target,
         average: values.reduce((sum, value) => sum + value, 0) / values.length
-    }
-}
+    };
+};
 
 try {
-    const args: Array<number> = parseArguments(process.argv)
-    console.log(calculateExercises(args.slice(1), args[0]))
+    const args: Array<number> = parseArguments(process.argv);
+    console.log(calculateExercises(args.slice(1), args[0]));
 } catch (error) {
-    console.log("Error:", error.message)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    console.log("Error:", error.message);
 }
