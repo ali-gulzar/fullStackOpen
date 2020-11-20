@@ -8,7 +8,7 @@ interface Result {
     average: number
 }
 
-const parseArguments = (args: Array<string>): Array<number> => {
+export const parseArguments = (args: Array<string>): Array<number> => {
     if (args.length !== 12) throw new Error("Invalid amount of arguments");
     
     const bmiValues = args.slice(2);
@@ -27,15 +27,15 @@ export const calculateExercises = (values: Array<number>, target: number): Resul
         success: (values.reduce((sum, value) => sum + value, 0)) / values.length > target,
         rating: 2,
         ratingDescription: "Well done Ali!",
-        target,
+        target: target,
         average: values.reduce((sum, value) => sum + value, 0) / values.length
     };
 };
 
-try {
-    const args: Array<number> = parseArguments(process.argv);
-    console.log(calculateExercises(args.slice(1), args[0]));
-} catch (error) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    console.log("Error:", error.message);
-}
+// try {
+//     const args: Array<number> = parseArguments(process.argv);
+//     console.log(calculateExercises(args.slice(1), args[0]));
+// } catch (error) {
+//     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+//     console.log("Error:", error.message);
+// }
