@@ -13,14 +13,19 @@ const getNonSensitivePatients = (): NonSensitivePatientData[] => {
         name,
         dateOfBirth,
         gender,
-        occupation
+        occupation,
+        entries: []
     }));
+};
+
+const getOnePatient = (id: string): NonSensitivePatientData | undefined => {
+    return patients.find(patient => patient.id === id);
 };
 
 const addNewPatient = (entry: NewPatientTypes ): PatientsTypes => {
     const newPatient = {
         id: String(Math.max(...patients.map(p => Number(p.id))) + 1),
-        ...entry
+        ...entry,
     };
     patients.push(newPatient);
     return newPatient;
@@ -29,5 +34,6 @@ const addNewPatient = (entry: NewPatientTypes ): PatientsTypes => {
 export default {
     getPatients,
     getNonSensitivePatients,
-    addNewPatient
+    addNewPatient,
+    getOnePatient
 };

@@ -9,6 +9,10 @@ patientRouter.get('/', (_req, res) => {
     res.json(patientService.getNonSensitivePatients());
 });
 
+patientRouter.get('/:id', (req, res) => {
+    res.json(patientService.getOnePatient(req.params.id));
+});
+
 patientRouter.post('/', (req, res) => {
     const entry: NewPatientTypes = utils.toNewPatient(req.body);
     const newPatient = patientService.addNewPatient(entry);
