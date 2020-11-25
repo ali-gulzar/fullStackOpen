@@ -78,9 +78,9 @@ export const DiagnosisSelection = ({
   setFieldValue,
   setFieldTouched
 }: {
-  diagnoses: Diagnosis[];
-  setFieldValue: FormikProps<{ diagnosisCodes: string[] }>["setFieldValue"];
-  setFieldTouched: FormikProps<{ diagnosisCodes: string[] }>["setFieldTouched"];
+  diagnoses: Diagnosis[] | undefined;
+  setFieldValue: FormikProps<{ diagnosisCodes: string[] | undefined }>["setFieldValue"];
+  setFieldTouched: FormikProps<{ diagnosisCodes: string[] | undefined }>["setFieldTouched"];
 }) => {
   const field = "diagnosisCodes";
   const onChange = (
@@ -91,11 +91,11 @@ export const DiagnosisSelection = ({
     setFieldValue(field, data.value);
   };
 
-  const stateOptions = diagnoses.map(diagnosis => ({
+  const stateOptions = diagnoses ? diagnoses.map(diagnosis => ({
     key: diagnosis.code,
     text: `${diagnosis.name} (${diagnosis.code})`,
     value: diagnosis.code
-  }));
+  })) : [];
 
   return (
     <Form.Field>

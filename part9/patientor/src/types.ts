@@ -35,7 +35,17 @@ interface HealthCheck extends BaseEntry {
   healthCheckRating: number;
 }
 
-export type Entry =  HospitalEntry | OccupationalHealthcare | HealthCheck; 
+export type Entry =  HospitalEntry | OccupationalHealthcare | HealthCheck;
+
+export interface EntryFormType {
+  id: string;
+  date: string;
+  specialist: string;
+  diagnosisCodes?: string;
+  description: string; 
+  type: string;
+  healthCheckRating: number;
+} 
 
 export enum Gender {
   Male = "male",
