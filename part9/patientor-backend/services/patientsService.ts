@@ -1,5 +1,5 @@
 import patientData from '../data/patient';
-import { NonSensitivePatientData, PatientsTypes, NewPatientTypes } from '../types';
+import { NonSensitivePatientData, PatientsTypes, NewPatientTypes, Entry } from '../types';
 
 const patients: Array<PatientsTypes> = patientData;
 
@@ -31,9 +31,19 @@ const addNewPatient = (entry: NewPatientTypes ): PatientsTypes => {
     return newPatient;
 };
 
+const addNewEntry = (entry: Entry, id: string): Entry | undefined => {
+    const patient = patients.find(patient => patient.id === id);
+    if (patient) {
+        patient.entries = patient.entries.concat(entry);
+        return entry;
+    }
+    return undefined;
+};
+
 export default {
     getPatients,
     getNonSensitivePatients,
     addNewPatient,
-    getOnePatient
+    getOnePatient,
+    addNewEntry
 };

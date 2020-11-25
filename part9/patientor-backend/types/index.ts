@@ -35,7 +35,7 @@ interface HealthCheck extends BaseEntry {
     healthCheckRating: number;
 }
 
-type Entry = BaseEntry | HospitalEntry | OccupationalHealthcare | HealthCheck; 
+export type Entry = BaseEntry | HospitalEntry | OccupationalHealthcare | HealthCheck; 
 
 export interface PatientsTypes {
     id: string;
